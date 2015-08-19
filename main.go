@@ -97,14 +97,6 @@ func main() {
 	dispatcher.Run()
 
 	go func(quit chan struct{}, done chan struct{}) {
-		go func() {
-			for i := 0; i < 3; i++ {
-				<-jobDone
-				fmt.Println("Done job")
-			}
-			quit <- struct{}{}
-		}()
-
 		for i := 0; i < 3; i++ {
 			work = Job{}
 			JobQueue <- work
@@ -114,6 +106,8 @@ func main() {
 			select {
 			case _ = <-quit:
 				done <- struct{}{}
+			case _ = <-jobDone:
+				fmt.Println("Done job")
 			}
 		}
 	}(quit, done)
