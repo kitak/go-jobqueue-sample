@@ -116,7 +116,7 @@ func main() {
 		for {
 			s := <-sig
 			fmt.Println(s)
-			done <- struct{}{}
+			quit <- struct{}{}
 		}
 	}()
 
